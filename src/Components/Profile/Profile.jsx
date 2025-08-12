@@ -125,7 +125,7 @@ export default function Profile() {
                     <div className="flex flex-col gap-4 ">
                       {/*Post Content*/}
                       <div className="p-2 w-[100%]">
-                        <p className="poppins text-lg font-light">{p.body}</p>
+                        <p className="poppins text-lg font-light overflow-clip">{p.body}</p>
                       </div>
                     </div>
                     {p.image ? (
@@ -193,7 +193,7 @@ export default function Profile() {
                                 <span className="poppins font-bold">
                                   {p.comments[1].commentCreator.name}
                                 </span>
-                                <span className="poppins font-light text-slate-500">
+                                <span className="poppins font-light text-slate-500 overflow-clip">
                                   {p.comments[1].content}
                                 </span>
                               </div>
@@ -217,7 +217,7 @@ export default function Profile() {
                                   <span className="poppins font-bold">
                                     {c.commentCreator.name}
                                   </span>
-                                  <span className="poppins font-light text-slate-500">
+                                  <span className="poppins font-light text-slate-500 overflow-clip">
                                     {c.content}
                                   </span>
                                 </div>

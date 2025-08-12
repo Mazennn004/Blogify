@@ -67,7 +67,7 @@ setApiError({status:true,msg:response.data.error});
   return (
     <Fade direction="left" duration={800}>
       <div className="row h-screen overflow-hidden">
-        <div className="w-full md:w-1/2 my-auto p-7">
+        <div className="w-full md:w-1/2 my-auto">
           <header className="flex flex-col  items-center">
             <Fade direction="up">
               <h1 className=" poppins text-4xl font-bold  text-main">
@@ -133,12 +133,12 @@ setApiError({status:true,msg:response.data.error});
                 <input
                 type="checkbox"
                   id="remember"
-                  className="mx-1 p-5 shadow"
+                  className="mx-1 shadow"
                 />
                 Remember me
               </label>
 
-              <span className="text-[#8327f9] font-medium cursor-pointer">
+              <span className="text-[#8327f9] md:font-medium cursor-pointer sm:text-sm">
                 Forget Password?
               </span>
             </div>
