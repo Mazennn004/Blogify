@@ -1,0 +1,12 @@
+<!-- Save as favicon-3.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="12" fill="url(#g)"></rect>
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0" stop-color="#4F46E5"></stop>
+      <stop offset="1" stop-color="#7C3AED"></stop>
+    </linearGradient>
+  </defs>
+  <path d="M18 16h12c4 0 8 3 8 7 0 3.3-2.6 6-6 6 3.4 0 6 2.7 6 6 0 4-4 7-8 7H18V16z" fill="#FFFFFF"></path>
+  <path d="M42 42l6 6V36l-6 6z" fill="#FFFFFF" opacity="0.95"></path>
+</svg>
