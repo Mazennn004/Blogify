@@ -4,6 +4,7 @@ import { tokenContext } from "../../Context/TokenContext";
 import axios from "axios";
 import { useEffect } from "react";
 import { shortFormat } from "../Home/Home";
+import { Link } from "react-router-dom";
 export default function Profile() {
   const { userData, isAuth } = useContext(tokenContext);
   const [userPosts, setUserPosts] = useState([]);
@@ -93,34 +94,35 @@ export default function Profile() {
           {userPosts.length != 0 ? (
             userPosts.map((p) => {
               return (
-                <div
-                  key={p.id}
-                  className="flex w-full flex-col gap-4 rounded-2xl shadow-md "
+               <div
+                 key={p._id}
+                  className="flex w-full flex-col gap-4 rounded-2xl shadow-md  "
                 >
                   {" "}
                   {/*Card Post*/}
-                  <div className="p-5">
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="flex gap-4">
+                   <Link   to={`/home/singlepost/${p._id}`}>
+                  <div className="p-5 ">
+                    <div className="flex items-center justify-between gap-4 ">
+                    <div className="flex gap-4">
                         <img
-                          src={p.user.photo}
-                          className="h-16 w-16 shrink-0 rounded-full"
-                          alt="profile-pic"
-                        />{" "}
-                        {/*profile image */}
-                        <div className="flex flex-col">
-                          <h2 className="poppins font-bold">{p.user.name}</h2>{" "}
-                          {/* Name */}
-                          <div className="poppins mt-0 text-slate-400 text-sm flex gap-1">
-                            <span>@{p.user.name.split(" ").pop()} .</span>
-                            <span> {shortFormat(p.createdAt)}</span>
-                          </div>{" "}
-                          {/* @name*/}
-                        </div>
+                        src={p.user.photo}
+                        className="h-16 w-16 shrink-0 rounded-full"
+                        alt="profile-pic"
+                      />{" "}
+                      {/*profile image */}
+                      <div className="flex flex-col">
+                        <h2 className="poppins font-bold">{p.user.name}</h2>{" "}
+                        {/* Name */}
+                        <div className="poppins mt-0 text-slate-400 text-sm flex gap-1">
+                          <span>@{p.user.name.split(" ").pop()} .</span>
+                          <span> {shortFormat(p.createdAt)}</span>
+                        </div>{" "}
+                        {/* @name*/}
                       </div>
-                      <div>
-                        <i className="fa-solid fa-ellipsis cursor-pointer text-slate-500 text-lg"></i>
-                      </div>
+                    </div>
+                    <div>
+                      <i className="fa-solid fa-ellipsis cursor-pointer text-slate-500 text-lg"></i>
+                    </div>
                     </div>
                     <div className="flex flex-col gap-4 ">
                       {/*Post Content*/}
@@ -146,11 +148,14 @@ export default function Profile() {
                         {p.comments.length}
                       </li>
                       <li>
+                       <span to={`singlepost/${p._id}`}>
                         <i className="fa-regular fa-comment mx-1 text-lg cursor-pointer hover:text-main transition-all duration-300 hover:scale-[105%]"></i>
                         {p.comments.length}
+                       </span>
                       </li>
                     </ul>
                   </div>
+                  </Link>
                   {p.comments.length != 0 ? (
                     <div className="p-5">
                       <span className="poppins text-lg font-bold">
@@ -168,9 +173,14 @@ export default function Profile() {
                                 />
                               </div>
                             </div>
-                            <div className="chat-bubble rounded-2xl poppins">
-                              <div className="flex flex-col gap-2">
-                                <span className="poppins font-bold">
+                            <div className="chat-bubble rounded-2xl poppins w-[90%] relative">
+                                {  p.comments[0].commentCreator._id== userData._id ?
+                                <span className="absolute end-0 top-0 p-2">
+                                <i className="fa-solid fa-ellipsis text-md text-slate-600"></i>
+                              </span> : ''
+                             }
+                              <div className="flex flex-col gap-2 ">
+                                <span className="poppins font-bold ">
                                   {p.comments[0].commentCreator.name}
                                 </span>
                                 <span className="poppins font-light text-slate-500">
@@ -188,12 +198,17 @@ export default function Profile() {
                                 />
                               </div>
                             </div>
-                            <div className="chat-bubble rounded-2xl poppins">
+                            <div className="chat-bubble rounded-2xl poppins w-[90%] relative">
+                             {  p.comments[1].commentCreator._id== userData._id ?
+                                <span className="absolute end-0 top-0 p-2">
+                                <i className="fa-solid fa-ellipsis text-md text-slate-600"></i>
+                              </span> : ''
+                             }
                               <div className="flex flex-col gap-2">
                                 <span className="poppins font-bold">
                                   {p.comments[1].commentCreator.name}
                                 </span>
-                                <span className="poppins font-light text-slate-500 overflow-clip">
+                                <span className="poppins font-light text-slate-500">
                                   {p.comments[1].content}
                                 </span>
                               </div>
@@ -212,7 +227,12 @@ export default function Profile() {
                                   />
                                 </div>
                               </div>
-                              <div className="chat-bubble rounded-2xl poppins">
+                              <div className="chat-bubble rounded-2xl poppins w-[90%] relative">
+                                 {  c.commentCreator._id== userData._id ?
+                                <span className="absolute end-0 top-0 p-2">
+                                <i className="fa-solid fa-ellipsis text-md text-slate-600"></i>
+                              </span> : ''
+                             }
                                 <div className="flex flex-col gap-2">
                                   <span className="poppins font-bold">
                                     {c.commentCreator.name}
@@ -226,37 +246,15 @@ export default function Profile() {
                           );
                         })
                       )}
-                      <div className="comment-input flex flex-row mt-5">
+ <div className="comment-input flex flex-row mt-5">
                         <div className="w-12 rounded-full">
                           <img
                             alt="Tailwind CSS chat bubble component"
                             src={userData.photo}
                           />
                         </div>
-                        <div className="w-full relative">
-                          <input
-                            type="text"
-                            placeholder={
-                              p.comments.length == 0
-                                ? "Be the first to Comment..!"
-                                : "Write a Comment..!"
-                            }
-                            className="mx-2 rounded-3xl w-full p-3 bg-slate-200 focus:outline-main placeholder:font-[poppins] placeholder:text-slate-600"
-                          />
-                          <i className="text-main text-lg fa-regular fa-paper-plane absolute end-0 top-[20px] mx-2 cursor-pointer"></i>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="comment-input flex flex-row m-3">
-                      <div className="w-12 rounded-full">
-                        <img
-                          alt="Tailwind CSS chat bubble component"
-                          src="https://linked-posts.routemisr.com/uploads/default-profile.png"
-                        />
-                      </div>
                       <div className="w-full relative">
-                        <input
+                          <input
                           type="text"
                           placeholder={
                             p.comments.length == 0
@@ -267,7 +265,30 @@ export default function Profile() {
                         />
                         <i className="text-main text-lg fa-regular fa-paper-plane absolute end-0 top-[20px] mx-2 cursor-pointer"></i>
                       </div>
+                      </div>
+                     
                     </div>
+                  ) : (
+                     <div className="comment-input flex flex-row m-3">
+                        <div className="w-12 rounded-full">
+                          <img
+                            alt="Tailwind CSS chat bubble component"
+                            src="https://linked-posts.routemisr.com/uploads/default-profile.png"
+                          />
+                        </div>
+                      <div className="w-full relative">
+                          <input
+                          type="text"
+                          placeholder={
+                            p.comments.length == 0
+                              ? "Be the first to Comment..!"
+                              : "Write a Comment..!"
+                          }
+                          className="mx-2  rounded-3xl w-full p-3 bg-slate-200 focus:outline-main placeholder:font-[poppins] placeholder:text-slate-600"
+                        />
+                        <i className="text-main text-lg fa-regular fa-paper-plane absolute end-0 top-[20px] mx-2 cursor-pointer"></i>
+                      </div>
+                      </div>
                   )}
                 </div>
               );

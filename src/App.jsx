@@ -12,6 +12,7 @@ import NotFound from './Components/NotFound/NotFound';
 import ProtectionGuard from './Components/ProtectionGuard/ProtectionGuard'
 import { tokenContext } from './Context/TokenContext'
 import NetwrokError from './Components/NetwrokError/NetwrokError';
+import SinglePost from './Components/SinglePost/SinglePost';
 
  
 
@@ -23,6 +24,7 @@ const routes=createBrowserRouter([
   {path:'home',element:<ProtectionGuard><MainLayout/></ProtectionGuard>,children:[
     {index:true,element:<ProtectionGuard><Home/></ProtectionGuard>},
     {path:'profile',element:<ProtectionGuard><Profile/></ProtectionGuard>},
+    {path:'singlepost/:id',element:<ProtectionGuard><SinglePost/></ProtectionGuard>},
     {path:'networkerror',element:<ProtectionGuard><NetwrokError/></ProtectionGuard>},
     {path:'*',element:<NotFound direction={'/home'}/>}
     

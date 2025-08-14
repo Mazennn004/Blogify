@@ -7,7 +7,7 @@ export default function ProtectionGuard(props) {
 return (props.children)
  }
  else{
- return <NotFound direction={'/'}/>
+ return <Navigate to='/'/>
  }
   
 }
