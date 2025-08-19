@@ -45,7 +45,7 @@ getUserData();
     <div className="dropdown dropdown-end">
       <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
         <div className="w-10 rounded-full">
-          {userData.photo ?  <img src={userData.photo} alt='' className="h-32 w-32 rounded-full"/> :  <div className="skeleton h-32 w-32 rounded-full"></div>}
+          {userData.photo ?  <img src={userData.photo} alt='user-profile' className="h-32 w-32 rounded-full"/> :  <div className="skeleton h-32 w-32 rounded-full"></div>}
         </div>
       </div>
       <ul
@@ -71,7 +71,7 @@ getUserData();
     </span>
   </div>
   <form >
-    <textarea placeholder={`What on your mind, ${userData.name.split(" ").shift()} ?`} className='resize-y w-full h-[100px] outline-0 p-5 placeholder:text-slate-400 placeholder:text-md'></textarea>
+    <textarea placeholder={`What's on your mind, ${userData.name.split(" ").shift()} ?`} className='resize-y w-full h-[100px] outline-0 p-5 placeholder:text-slate-400 placeholder:text-md'></textarea>
     <label htmlFor="imageinput">
       <i className='fa-solid fa-images cursor-pointer m-3 text-lg text-slate-400'></i>
     </label>

@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import style from "./SignUp.module.css";
 import {Fade} from "react-awesome-reveal";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import image from "../../assets/signup-img.png";
+import image from "../../assets/signup.webp";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";

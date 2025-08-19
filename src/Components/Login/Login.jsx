@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import style from "./Login.module.css";
 import { Link, redirect, useNavigate } from "react-router-dom";
-import image from "../../assets/Login-img.png";
+import image from "../../assets/login.webp";
 import { useForm } from "react-hook-form";
 import { Fade } from "react-awesome-reveal";
 import { zodResolver } from "@hookform/resolvers/zod";

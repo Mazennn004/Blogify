@@ -7,10 +7,12 @@ import { useState } from "react";
 import { shortFormat } from "./../Home/Home";
 import { tokenContext } from "../../Context/TokenContext";
 import { useForm } from "react-hook-form";
+import Comment from "../Comment/Comment";
 
 export default function SinglePost() {
   const { id } = useParams();
   const [post, setPost] = useState({});
+  const[comments,setComments]=useState([]);
   const [isPosted, setisPosted] = useState(false);
   const [isError, setIsError] = useState({
     status: false,
@@ -36,7 +38,10 @@ export default function SinglePost() {
         },
       })
       .then(({ data }) => {
+        
         setPost(data.post);
+        setComments(data.post.comments.reverse())
+        
       })
       .catch(() => {
         console.log("error");
@@ -56,9 +61,10 @@ export default function SinglePost() {
         }
       );
       if (data.message === "success") {
+        
         form.reset();
         setIsLoading(false);
-        getSinglePost(id);
+       setComments(data.comments)
         setisPosted(true);
         setTimeout(() => {
           setisPosted(false);
@@ -81,6 +87,8 @@ export default function SinglePost() {
   }
   useEffect(() => {
     getSinglePost(id);
+   
+    
   }, []);
 
   return (
@@ -160,12 +168,12 @@ export default function SinglePost() {
               <ul className="poppins p-2 text-slate-500 flex gap-5">
                 <li>
                   <i className="fa-regular fa-heart mx-1 text-lg cursor-pointer hover:text-red-600 hover:scale-[105%] transition-all duration-300"></i>
-                  {post.comments.length}
+                  {comments.length}
                 </li>
                 <li>
                   <span>
                     <i className="fa-regular fa-comment mx-1 text-lg cursor-pointer hover:text-main transition-all duration-300 hover:scale-[105%]"></i>
-                    {post.comments.length}
+                    {comments.length}
                   </span>
                 </li>
               </ul>
@@ -185,7 +193,7 @@ export default function SinglePost() {
                   {...register("content")}
                   type="text"
                   placeholder={
-                    post.comments.length == 0
+                    comments.length == 0
                       ? "Be the first to Comment..!"
                       : "Write a Comment..!"
                   }
@@ -207,46 +215,14 @@ export default function SinglePost() {
                 </button>
               </form>
             </div>
-            {post.comments.length != 0 ? (
+            {comments.length != 0 ? (
               <div className="p-5">
                 <span className="poppins text-lg font-bold">
-                  Comments ({post.comments.length})
+                  Comments ({comments.length})
                 </span>
-                {post.comments.map((c, i) => {
+                {comments.map((c, i) => {
                   return (
-                    <div key={i} className="chat chat-start">
-                      <div className="chat-image avatar">
-                        <div className="w-10 rounded-full">
-                          <img
-                            alt="Tailwind CSS chat bubble component"
-                            src="https://linked-posts.routemisr.com/uploads/default-profile.png"
-                          />
-                        </div>
-                      </div>
-                      <div className="chat-bubble rounded-2xl poppins w-[90%] relative">
-                        {c.commentCreator._id == userData._id ? (
-                          <span
-                            onClick={() => {
-                              setShowMenu(true);
-                            }}
-                            className="absolute end-0 top-0 p-2"
-                          >
-                            <i className="fa-solid fa-ellipsis text-md text-slate-600"></i>
-                          </span>
-                        ) : (
-                          ""
-                        )}
-                       
-                        <div className="flex flex-col gap-2">
-                          <span className="poppins font-bold">
-                            {c.commentCreator.name}
-                          </span>
-                          <span className="poppins font-light text-slate-500 overflow-clip">
-                            {c.content}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                   <Comment key={i} data={c}/>
                   );
                 })}
               </div>
