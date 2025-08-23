@@ -169,22 +169,22 @@ export default function Comment({ data: c }) {
             <span className="poppins font-bold">{c.commentCreator.name}</span>
             <span className="poppins font-light text-slate-500 overflow-clip relative">
               {isEdit ? (
-                <form onSubmit={handleSubmit(updateComment)} className="w-fit">
+                <form onSubmit={handleSubmit(updateComment)} className="w-full">
                   <input
                     {...register("content")}
                     type="text"
-                    className="p-1 outline-main rounded poppins placeholder:italic placeholder:text-sm"
+                    className="p-1 outline-main rounded poppins placeholder:italic placeholder:text-sm w-full"
                     autoFocus="true"
                     placeholder="Edit your comment"
                   />
-                  <button>
-                   {editLoading ? <i className="fa-solid fa-spinner fa-spin absolute ms-6 top-2 cursor-wait"></i> :  <i className="fa-regular fa-paper-plane text-main absolute ms-6 top-2 cursor-pointer"></i>}
+                  <button className="absolute end-0 mt-1">
+                   {editLoading ? <i className="fa-solid fa-spinner fa-spin  cursor-wait"></i> :  <i className="fa-regular fa-paper-plane text-main  cursor-pointer"></i>}
                   </button>
                   <i
                     onClick={() => {
                       setisEdit(false);
                     }}
-                    className="fa-solid fa-close mx-1 cursor-pointer"
+                    className="fa-solid fa-close absolute end-0 mx-5 mt-2 cursor-pointer"
                   ></i>
                 </form>
               ) : (
