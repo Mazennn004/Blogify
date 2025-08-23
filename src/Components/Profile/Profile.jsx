@@ -4,37 +4,34 @@ import { tokenContext } from "../../Context/TokenContext";
 import axios from "axios";
 import { useEffect } from "react";
 import { shortFormat } from "../Home/Home";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Post from "../Post/Post";
+import { useQuery } from "@tanstack/react-query";
 export default function Profile() {
   const { userData, isAuth } = useContext(tokenContext);
-  const [userPosts, setUserPosts] = useState([]);
-  const [isEmptyPosts, setIsEmptyPosts] = useState(false);
+
   function getUserPosts(token) {
-    axios
-      .get(
-        "https://linked-posts.routemisr.com/users/664bcf3e33da217c4af21f00/posts?limit=10",
-        {
-          headers: {
-            token: token,
-          },
-        }
-      )
-      .then(({ data }) => {
-        if(data.message==='success'&&data.posts.length!=0){
-          setUserPosts(data.posts);
-        }else{
-          setUserPosts(data.posts);
-          setIsEmptyPosts(true);
-        }
-      })
-      .catch(() => {
-        console.log("error fetching user data");
-      });
+    return axios.get(
+      "https://linked-posts.routemisr.com/users/664bcf3e33da217c4af21f00/posts?limit=10",
+      {
+        headers: {
+          token: token,
+        },
+      }
+    );
   }
-  useEffect(() => {
-    getUserPosts(isAuth);
-  }, []);
+  const nav = useNavigate();
+  let { data, isLoading, isError } = useQuery({
+    queryKey: ["userPosts"],
+    queryFn: () => {
+      return getUserPosts(isAuth);
+    },
+  });
+
+  if (isError) {
+    nav("/home/networkerror");
+  }
+
   return (
     <>
       <div className=" w-full md:w-[75%] ms-auto m-10 p-2 flex flex-col gap-10 ">
@@ -92,14 +89,8 @@ export default function Profile() {
               </span>
             </li>
           </ul>
-          {userPosts.length != 0 ? (
-            userPosts.map((p) => {
-              return (
-              <Post key={p._id} data={p}/>
-              );
-            })
-          ) : !isEmptyPosts ? (
-            <div className="flex w-full flex-col gap-4 rounded-4xl p-5 shadow-md ">
+          {isLoading && (
+            <div className="flex w-full flex-col gap-4 rounded-4xl p-5 shadow-md bg-white">
               {" "}
               {/*Card */}
               <div className="flex items-center gap-4">
@@ -115,17 +106,23 @@ export default function Profile() {
               </div>
               <div className="skeleton h-80 w-full"></div>
             </div>
-          ): <div className="flex justify-center">
-           <div>
-             <span className="text-main text-4xl poppins font-bold">
-              No Posts Yet !
-            </span>
-            <p className="text-slate-500 poppins font-light text-center">
-              Say Hi to our Community!
-            </p>
-           </div>
-          </div>
-          }
+          )}
+          {data?.data.posts.length === 0 ? (
+            <div className="flex justify-center">
+              <div>
+                <span className="text-main text-4xl poppins font-bold">
+                  No Posts Yet !
+                </span>
+                <p className="text-slate-500 poppins font-light text-center">
+                  Say Hi to our Community!
+                </p>
+              </div>
+            </div>
+          ) : (
+            data?.data.posts.map((p) => {
+              return <Post key={p._id} data={p} />;
+            })
+          )}
         </div>
       </div>
     </>

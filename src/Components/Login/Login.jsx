@@ -14,7 +14,10 @@ export default function Login() {
     email: z.email("Enter valid email address *"),
     password: z
       .string()
-      .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,'Please Enter Valid Password *'),
+      .regex(
+        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+        "Please Enter Valid Password *"
+      ),
   });
   const form = useForm({
     defaultValues: {
@@ -23,46 +26,37 @@ export default function Login() {
     },
     resolver: zodResolver(schema),
   });
-  let{isAuth,setIsAuth}=useContext(tokenContext);
-  const[loading,setLoading]=useState(false);
-  const[apiError,setApiError]=useState({status:false,msg:""});
+  let { isAuth, setIsAuth } = useContext(tokenContext);
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState({ status: false, msg: "" });
   const { register, handleSubmit, formState } = form;
-const navigate=useNavigate();
-useEffect(()=>{
-if(isAuth){
-  navigate('home');
-  
-}
-},[])
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isAuth) {
+      navigate("home");
+    }
+  }, []);
   async function handleLogin(account) {
     setLoading(true);
-   try{
-    const {data}=await axios.post('https://linked-posts.routemisr.com/users/signin',account);
-    if(data.message==='success'){
-      setLoading(false);
-      localStorage.setItem('token',data.token);
-      setIsAuth(data.token)
-      navigate('home');
-      
-      }else{
+    try {
+      const { data } = await axios.post(
+        "https://linked-posts.routemisr.com/users/signin",
+        account
+      );
+      if (data.message === "success") {
+        setLoading(false);
+        localStorage.setItem("token", data.token);
+        setIsAuth(data.token);
+        navigate("home");
+      } else {
         throw new Error();
       }
-   
-    
-   }
-   catch({response}){
-    setLoading(false)
-console.log(response.data.error,response.status);
-setApiError({status:true,msg:response.data.error});
-
-
-
-
-   }
+    } catch ({ response }) {
+      setLoading(false);
+      console.log(response.data.error, response.status);
+      setApiError({ status: true, msg: response.data.error });
+    }
   }
-
-
-
 
   return (
     <Fade direction="left" duration={800}>
@@ -130,11 +124,7 @@ setApiError({status:true,msg:response.data.error});
             )}
             <div className="flex justify-between mt-3 w-[80%] mx-auto">
               <label htmlFor="remember">
-                <input
-                type="checkbox"
-                  id="remember"
-                  className="mx-1 shadow"
-                />
+                <input type="checkbox" id="remember" className="mx-1 shadow" />
                 Remember me
               </label>
 
@@ -142,13 +132,22 @@ setApiError({status:true,msg:response.data.error});
                 Forget Password?
               </span>
             </div>
-            {
-              apiError.status ? <span className=" font-light text-center my-2 bg-red-100 border-accent  rounded-lg capitalize text-lg text-red-500">
+            {apiError.status ? (
+              <span className=" font-light text-center my-2 bg-red-100 border-accent  rounded-lg capitalize text-lg text-red-500">
                 {apiError.msg}
-              </span>:''
-            }
-            <button disabled={loading} className="disabled:bg-slate-600 disabled:cursor-not-allowed p-2 rounded-lg bg-[#8327f9] mt-5 text-white cursor-pointer w-[80%] mx-auto">
-             {loading ? <i className="fa-solid fa-spinner fa-spin"></i>: 'Log In'}
+              </span>
+            ) : (
+              ""
+            )}
+            <button
+              disabled={loading}
+              className="disabled:bg-slate-600 disabled:cursor-not-allowed p-2 rounded-lg bg-[#8327f9] mt-5 text-white cursor-pointer w-[80%] mx-auto"
+            >
+              {loading ? (
+                <i className="fa-solid fa-spinner fa-spin"></i>
+              ) : (
+                "Log In"
+              )}
             </button>
           </form>
         </div>
