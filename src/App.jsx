@@ -15,6 +15,7 @@ import NetwrokError from "./Components/NetwrokError/NetwrokError";
 import SinglePost from "./Components/SinglePost/SinglePost";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import ChangeProfilePic from "./Components/ChangeProfilePic/ChangeProfilePic";
 const query = new QueryClient();
 
 function App() {

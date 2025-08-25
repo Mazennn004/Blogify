@@ -130,9 +130,29 @@ export default function SinglePost() {
                   {/* @name*/}
                 </div>
               </div>
-              <div>
-                <i className="fa-solid fa-ellipsis cursor-pointer text-slate-500 text-lg"></i>
+               {userData._id == data?.user._id ? (
+              <div className="dropdown dropdown-top">
+                <div tabIndex={0} role="button" className="cursor-pointer m-1">
+                  <i className="fa-solid fa-ellipsis text-slate-400 text-lg"></i>
+                </div>
+                <ul
+                  tabIndex={0}
+                  className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+                >
+                  <li onClick={()=>{setShowMenu({isShow:true,target:'updatePost'})
+                  
+                  }}>
+                    <span className="poppins"><i className="fa-solid fa-edit text-md mx-2 text-main"></i> Edit</span>
+                  </li>
+                  <li onClick={()=>{console.log('delete');
+                  }}>
+                     <span className="poppins"><i className="fa-solid fa-trash text-md mx-2 text-red-400"></i> Delete</span>
+                  </li>
+                </ul>
               </div>
+            ) : (
+              ""
+            )}
             </div>
             <div className="flex flex-col gap-4 ">
               {/*Post Content*/}

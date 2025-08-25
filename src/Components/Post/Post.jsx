@@ -12,7 +12,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export default function Post({ data: p }) {
   let query = useQueryClient();
-  const { userData } = useContext(tokenContext);
+  const { userData,setShowMenu,showMenu } = useContext(tokenContext);
   let comments = p.comments;
   const [isPosted, setisPosted] = useState(false);
   const [isError, setIsError] = useState({
@@ -101,9 +101,29 @@ export default function Post({ data: p }) {
                 {/* @name*/}
               </div>
             </div>
-            <div>
-              <i className="fa-solid fa-ellipsis cursor-pointer text-slate-500 text-lg"></i>
-            </div>
+            {userData._id == p.user._id ? (
+              <div className="dropdown dropdown-left">
+                <div tabIndex={0} role="button" className="cursor-pointer m-1">
+                  <i className="fa-solid fa-ellipsis text-slate-400 text-lg"></i>
+                </div>
+                <ul
+                  tabIndex={0}
+                  className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+                >
+                  <li onClick={()=>{setShowMenu({isShow:true,target:'updatePost'})
+                  
+                  }}>
+                    <span className="poppins"><i className="fa-solid fa-edit text-md mx-2 text-main"></i> Edit</span>
+                  </li>
+                  <li onClick={()=>{console.log('delete');
+                  }}>
+                     <span className="poppins"><i className="fa-solid fa-trash text-md mx-2 text-red-400"></i> Delete</span>
+                  </li>
+                </ul>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
           <div className="flex flex-col gap-4 ">
             {/*Post Content*/}
@@ -153,10 +173,11 @@ export default function Post({ data: p }) {
                   return <Comment key={i} data={c} />;
                 })}
             <div className="comment-input flex flex-row mt-5">
-              <div className="w-12 rounded-full">
+              <div className="w-12 h-12 rounded-full">
                 <img
                   alt="Tailwind CSS chat bubble component"
                   src={userData.photo}
+                   className="w-full h-full rounded-full object-cover"
                 />
               </div>
               <form
@@ -185,10 +206,11 @@ export default function Post({ data: p }) {
           </div>
         ) : (
           <div className="comment-input flex flex-row m-3">
-            <div className="w-12 rounded-full">
+            <div className="w-12 rounded-full h-12 bg-red-500">
               <img
                 alt="Tailwind CSS chat bubble component"
-                src="https://linked-posts.routemisr.com/uploads/default-profile.png"
+                src={userData.photo}
+                className="w-full h-full rounded-full object-cover"
               />
             </div>
             <form

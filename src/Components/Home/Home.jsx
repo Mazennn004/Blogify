@@ -39,10 +39,13 @@ export default function Home() {
 
   function getAllPosts() {
     return axios
-      .get(`https://linked-posts.routemisr.com/posts?page=208`, {
+      .get(`https://linked-posts.routemisr.com/posts?limit=50`, {
         headers: {
           token: localStorage.getItem("token"),
         },
+        params:{
+          sort:'-createdAt',
+        }
       })
       .then((res) => res.data);
   }
@@ -50,6 +53,7 @@ export default function Home() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["getPosts"],
     queryFn: getAllPosts,
+    retry:1,
   });
 
   if (isLoading) {

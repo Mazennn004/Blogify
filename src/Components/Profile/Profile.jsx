@@ -7,8 +7,9 @@ import { shortFormat } from "../Home/Home";
 import { Link, useNavigate } from "react-router-dom";
 import Post from "../Post/Post";
 import { useQuery } from "@tanstack/react-query";
+import Toast from './../Toast/Toast';
 export default function Profile() {
-  const { userData, isAuth } = useContext(tokenContext);
+  const { userData, isAuth ,setShowMenu,editProfileToast} = useContext(tokenContext);
 
   function getUserPosts(token) {
     return axios.get(
@@ -26,6 +27,8 @@ export default function Profile() {
     queryFn: () => {
       return getUserPosts(isAuth);
     },
+    retry:1,
+    select:(data)=>data?.data?.posts.reverse()
   });
 
   if (isError) {
@@ -34,10 +37,11 @@ export default function Profile() {
 
   return (
     <>
+      {editProfileToast.visible && <Toast msg={editProfileToast.msg} status={editProfileToast.status}/>}
       <div className=" w-full md:w-[75%] ms-auto m-10 p-2 flex flex-col gap-10 ">
         <div className="rounded-2xl shadow ">
           <div className="cover w-full  rounded-2xl h-[30vh] relative">
-            <figure className="absolute bottom-[-30px] start-0   mx-5   ">
+            <figure className="absolute bottom-[-30px] start-0 mx-5 ">
               {userData.photo ? (
                 <img
                   src={userData.photo}
@@ -67,7 +71,8 @@ export default function Profile() {
               )}
             </div>
             <div className="settings mt-6">
-              <button className="p-2 rounded-3xl cursor-pointer hover:bg-violet-700 transition-all duration-300 bg-main text-white poppins mx-2">
+              <button onClick={()=>{setShowMenu({isShow:true,target:'editProfile'});
+            }} className="p-2 rounded-3xl cursor-pointer hover:bg-violet-700 transition-all duration-300 bg-main text-white poppins mx-2">
                 <i className="fa-solid fa-edit text-white text-md mx-2"></i>Edit
                 Profile
               </button>
@@ -107,7 +112,7 @@ export default function Profile() {
               <div className="skeleton h-80 w-full"></div>
             </div>
           )}
-          {data?.data.posts.length === 0 ? (
+          {data?.length === 0 ? (
             <div className="flex justify-center">
               <div>
                 <span className="text-main text-4xl poppins font-bold">
@@ -118,8 +123,7 @@ export default function Profile() {
                 </p>
               </div>
             </div>
-          ) : (
-            data?.data.posts.map((p) => {
+          ) : (data?.map((p) => {
               return <Post key={p._id} data={p} />;
             })
           )}

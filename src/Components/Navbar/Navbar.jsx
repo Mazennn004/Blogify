@@ -1,12 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import style from "./Navbar.module.css";
 import { Link } from "react-router-dom";
 import { tokenContext } from "../../Context/TokenContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
+import CreatePost from "../CreatePost/CreatePost";
+import Modal from "./../Modal/Modal";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import Toast from "../Toast/Toast";
 
 export default function Navbar() {
+  const[userDataError,setUserDataError]=useState(false);
+  const refetch=useQueryClient();
   const { isAuth, setIsAuth, userData, setUserData, showMenu, setShowMenu } =
     useContext(tokenContext);
   const nav = useNavigate();
@@ -16,28 +22,35 @@ export default function Navbar() {
     nav("/");
   }
   function getUserData() {
-    axios
-      .get("https://linked-posts.routemisr.com/users/profile-data", {
+    return axios.get("https://linked-posts.routemisr.com/users/profile-data", {
         headers: {
           token: isAuth,
         },
       })
-      .then(({ data }) => {
-        setUserData(data.user);
-      })
-      .catch(() => {
-        console.log("error");
-      });
+      
   }
+
+  const {isSuccess,data,isError} = useQuery({
+    queryKey: ["getUserData"],
+    queryFn: getUserData,
+    staleTime:1000*60*60,
+    retry:false,
+  });
+
   useEffect(() => {
-    getUserData();
-  }, []);
+    if(isSuccess && data?.data?.user) {
+      setUserData(data.data.user);
+      setUserDataError(false); 
+    }else if(isError){
+     setUserDataError(true);
+    }
+  }, [isSuccess, data,isError]);
 
   return (
     <>
       <div
         className={`${
-          showMenu ? "blur" : ""
+          showMenu.isShow ? "blur" : ""
         } navbar  bg-base-100 shadow-sm fixed top-0 z-10`}
       >
         <div className="flex-1">
@@ -51,7 +64,7 @@ export default function Navbar() {
         <div className="flex gap-2 md:mx-16">
           <button
             onClick={() => {
-              setShowMenu(true);
+              setShowMenu({ isShow: true, target: "createPost" });
             }}
             className="hidden md:flex bg-[#4F39F6] p-3 rounded-4xl text-white mx-4 poppins cursor-pointer hover:bg-violet-800 transition-all duration-300"
           >
@@ -94,46 +107,8 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-      {showMenu ? (
-        <div className="fixed inset-0 bg-[rgba(0,0,0,0.1)]  flex justify-center items-center  z-50">
-          <div className=" w-[80%] md:w-1/2 p-5 bg-white rounded-2xl">
-            <div className="border-b-2 border-slate-200 flex justify-between p-2">
-              <span className="poppins text-lg font-bold">Create Post</span>
-              <span>
-                <i
-                  onClick={() => {
-                    setShowMenu(false);
-                  }}
-                  className="fa-solid fa-close text-lg text-black font-light p-2 cursor-pointer"
-                ></i>
-              </span>
-            </div>
-            <form>
-              <textarea
-                placeholder={`What's on your mind, ${userData.name
-                  .split(" ")
-                  .shift()} ?`}
-                className="resize-y w-full h-[100px] outline-0 p-5 placeholder:text-slate-400 placeholder:text-md"
-              ></textarea>
-              <label htmlFor="imageinput">
-                <i className="fa-solid fa-images cursor-pointer m-3 text-lg text-slate-400"></i>
-              </label>
-              <input
-                id="imageinput"
-                type="file"
-                className="file-input file-input-ghost mx-2"
-              />
-              <div className="border-t-2 border-slate-200 flex justify-end p-2">
-                <button className="rounded-4xl bg-main p-3 cursor-pointer text-white poppins">
-                  Post
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      ) : (
-        ""
-      )}
+      {showMenu.isShow ? <Modal target={showMenu.target} /> : ""}
+      {userDataError && <Toast msg={'Error Fetching User Data'} status={'error'}/>}
     </>
   );
 }

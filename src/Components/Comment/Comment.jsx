@@ -96,8 +96,8 @@ export default function Comment({ data: c }) {
           });
     }
    }).catch((err)=>{
-    console.log(err);
-    setShowToast({show:true,status:'error',msg:`${err.response.data.error}`});
+    console.error(err);
+    setShowToast({show:true,status:'error',msg:`can't delete this comment`});
           setTimeout(() => {
             setShowToast({
               show:false,

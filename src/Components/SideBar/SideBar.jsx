@@ -9,7 +9,7 @@ export default function SideBar() {
     <>
       <div
         className={`md:hidden dock dock-md fixed bottom-0 ${
-          showMenu ? "blur" : ""
+          showMenu.isShow ? "blur" : ""
         }`}
       >
         <Link to="" end="true">
@@ -58,7 +58,7 @@ export default function SideBar() {
 
         <button
           onClick={() => {
-            setShowMenu(true);
+            setShowMenu({isShow:true,target:'createPost'});
           }}
           className="p-5 bg-main rounded-full h-[50px] w-[50px]"
         >
@@ -75,7 +75,7 @@ export default function SideBar() {
       </div>
       <nav
         className={`hidden md:flex md:flex-col fixed start-0 top-0 bottom-0 p-5  w-[20%] shadow ${
-          showMenu ? "blur" : ""
+          showMenu.isShow ? "blur" : ""
         }`}
       >
         <ul className="flex flex-col gap-3 pt-[70px] ">
