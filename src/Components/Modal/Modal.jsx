@@ -3,7 +3,8 @@ import style from "./Modal.module.css";
 import CreatePost from "./../CreatePost/CreatePost";
 import UpdatePost from "./../UpdatePost/UpdatePost";
 import EditProfile from './../EditProfile/EditProfile';
-export default function Modal({ target }) {
+export default function Modal({ target ,data}) {
+  
   if (target === "createPost") {
     return (
       <>
@@ -14,7 +15,7 @@ export default function Modal({ target }) {
   if (target === "updatePost") {
     return (
       <>
-        <UpdatePost />
+        <UpdatePost data={data}/>
       </>
     );
   }

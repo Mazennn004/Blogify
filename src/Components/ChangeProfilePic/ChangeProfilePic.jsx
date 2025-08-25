@@ -7,6 +7,7 @@ import axios from "axios";
 import { Fade } from 'react-awesome-reveal';
 import ChangePassword from './../ChangePassword/ChangePassword';
 import { useQueryClient } from '@tanstack/react-query';
+import { compressImage, convertImageToJPEG } from '../CreatePost/CreatePost';
 export default function ChangeProfilePic() {
   const refresh = useQueryClient();
   const { setShowMenu, userData,setEditProfileToast } = useContext(tokenContext);
@@ -28,16 +29,20 @@ export default function ChangeProfilePic() {
     }
   }
   async function changeProfilePic(values) {
+    console.log(values);
+    
     setloadingEditProfile(true);
     const formData = new FormData();
-    formData.append("photo", values.photo[0]);
+    const handledImg= await convertImageToJPEG(values.photo[0]);
+    const finalImg= await compressImage(handledImg);
+    formData.append("photo", finalImg);
    try{
     const {data}=await axios.put('https://linked-posts.routemisr.com/users/upload-photo',formData,{
       headers:{
         token:localStorage.getItem('token'),
       }
     })
-    if(data.message=='success'){
+    if(data.message==='success'){
       setloadingEditProfile(false);
       setShowMenu(false);
       refresh.invalidateQueries({queryKey:['getUserData'],refetchType:'active'});

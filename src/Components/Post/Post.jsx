@@ -9,10 +9,9 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import Toast from "../Toast/Toast";
 import { useQueryClient } from "@tanstack/react-query";
-
 export default function Post({ data: p }) {
   let query = useQueryClient();
-  const { userData,setShowMenu,showMenu } = useContext(tokenContext);
+  const { userData,setShowMenu,showMenu,setCreatePostToast } = useContext(tokenContext);
   let comments = p.comments;
   const [isPosted, setisPosted] = useState(false);
   const [isError, setIsError] = useState({
@@ -70,6 +69,26 @@ export default function Post({ data: p }) {
       }, 2000);
     }
   }
+  async function deletePost(){
+    try{
+      const {data}=await axios.delete(`https://linked-posts.routemisr.com/posts/${p._id}`,{
+        headers:{
+          token:localStorage.getItem('token'),
+        }
+      })
+      if(data.message==='success'){
+        setCreatePostToast({visible:true,msg:'Post Deleted successfully',status:'success'});
+        setTimeout(()=>{
+           setCreatePostToast({visible:false,msg:'',status:''});
+        },3000);
+        query.invalidateQueries({queryKey:['getPosts'],refetchType:'active'});
+        query.invalidateQueries({queryKey:['userPosts'],refetchType:'active'});
+      }
+     
+    }catch(err){
+      console.log(err);
+    }
+  }
   return (
     <>
       {isPosted ? (
@@ -110,12 +129,12 @@ export default function Post({ data: p }) {
                   tabIndex={0}
                   className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
                 >
-                  <li onClick={()=>{setShowMenu({isShow:true,target:'updatePost'})
+                  <li onClick={()=>{setShowMenu({isShow:true,target:'updatePost',data:p})
                   
                   }}>
                     <span className="poppins"><i className="fa-solid fa-edit text-md mx-2 text-main"></i> Edit</span>
                   </li>
-                  <li onClick={()=>{console.log('delete');
+                  <li onClick={()=>{ deletePost();
                   }}>
                      <span className="poppins"><i className="fa-solid fa-trash text-md mx-2 text-red-400"></i> Delete</span>
                   </li>

@@ -7,13 +7,12 @@ import { useEffect } from "react";
 import axios from "axios";
 import CreatePost from "../CreatePost/CreatePost";
 import Modal from "./../Modal/Modal";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Toast from "../Toast/Toast";
 
 export default function Navbar() {
   const[userDataError,setUserDataError]=useState(false);
-  const refetch=useQueryClient();
-  const { isAuth, setIsAuth, userData, setUserData, showMenu, setShowMenu } =
+  const { isAuth, setIsAuth, userData, setUserData, showMenu, setShowMenu ,setCreatePostToast,createPostToast} =
     useContext(tokenContext);
   const nav = useNavigate();
   function logout() {
@@ -107,8 +106,9 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-      {showMenu.isShow ? <Modal target={showMenu.target} /> : ""}
+      {showMenu.isShow ? <Modal target={showMenu.target} data={showMenu.data}/> : ""}
       {userDataError && <Toast msg={'Error Fetching User Data'} status={'error'}/>}
+     { createPostToast.visible && <Toast msg={createPostToast.msg} status={createPostToast.status}/>}
     </>
   );
 }

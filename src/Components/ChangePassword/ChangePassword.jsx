@@ -64,7 +64,7 @@ const{data}=await axios.patch(`https://linked-posts.routemisr.com/users/change-p
 {formState.errors.newPassword && <span className='text-red-400 poppins mt-2 text-sm'>{formState.errors.newPassword.message}</span>}
   <label className="label">Confirm New Password</label>
   <input onChange={(e)=>{setNewPassword(e.target.value)}} type="password" className={`input`} placeholder="Confirm New Password" />
-  <span className='my-3 poppins text-slate-400'>Last updaated on {new Date(userData.passwordChangedAt).toLocaleDateString()}</span>
+{userData.passwordChangedAt  &&   <span className='my-3 poppins text-slate-400'>Last updaated on {new Date(userData.passwordChangedAt).toLocaleDateString()}</span>}
   <span onClick={()=>{setChangePassword(false)}} className='text-slate-400 text-md hover:underline text-center mt-4 cursor-pointer'>Back</span>
  { responseError.isApiError && <span className='text-red-400 capitalize text-center poppins mt-2 text-sm'>{responseError.msg} *</span>}
   <button className='p-4 bg-main poppins rounded-xl  text-white cursor-pointer mt-5 hover:bg-[#2563eb] transition-all duration-300'>

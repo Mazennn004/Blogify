@@ -1,11 +1,13 @@
 import React, { useContext } from 'react'
 import style from './UpdatePost.module.css'
 import { tokenContext } from '../../Context/TokenContext';
+import { useForm } from 'react-hook-form';
 export default function UpdatePost() {
     const{setShowMenu}=useContext(tokenContext);
+    
   return (
   <>
- <div className="fixed inset-0 bg-[rgba(0,0,0,0.1)]  flex justify-center items-center  z-50">
+ {/* <div className="fixed inset-0 bg-[rgba(0,0,0,0.1)]  flex justify-center items-center  z-50">
           <div className=" w-[80%] md:w-1/2 p-5 bg-white rounded-2xl">
             <div className="border-b-2 border-slate-200 flex justify-between p-2">
               <span className="poppins text-lg font-bold">Update Post</span>
@@ -38,7 +40,7 @@ export default function UpdatePost() {
               </div>
             </form>
           </div>
-        </div>
+        </div> */}
   </>
   )
 }
