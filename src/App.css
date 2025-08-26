@@ -1,15 +1,20 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 @plugin "daisyui" {
   themes: light --default, dark, cupcake;
 }
 @layer theme, base, components, utilities;
 @theme{
   --color-main:#8327f9;
+  --color-bgTheme:#1D232A
 }
 @layer components{
   .row{
     @apply flex flex-wrap;
   }
+  .active{
+    @apply bg-[#cad5e2] dark:bg-slate-600;
+}
 }
 .cover{
   background: url(/public/ChatGPT\ Image\ Aug\ 6\,\ 2025\,\ 07_37_34\ PM.png);

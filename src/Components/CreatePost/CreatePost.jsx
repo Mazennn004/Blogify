@@ -8,6 +8,7 @@ import axios from "axios";
 import z from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from "@tanstack/react-query";
+import { fi } from "zod/v4/locales";
 
 
 export async function convertImageToJPEG(image) {
@@ -27,22 +28,21 @@ export async function convertImageToJPEG(image) {
       return image;
     }
   } catch (err) {
-    console.error(err);
+    console.error(err,image);
     return image;
   }
 }
 export async function compressImage(image) {
-  try {
+try {
     const options = {
-      maxSizeMB: 6,
-      maxWidthOrHeight: 1200,
+      maxSizeMB: 5,
+      maxWidthOrHeight: 800,
       useWebWorker: true,
     };
     const compressedImage = await imageCompression(image, options);
-
     return compressedImage;
   } catch (err) {
-    console.error(err,'Could not compress image');
+    console.error(err,'Could not compress image',image);
     return image;
   }
 }
@@ -61,7 +61,7 @@ export default function CreatePost() {
       body: "",
       image: "",
     },
-   
+   resolver:zodResolver(schema)
   });
   const { handleSubmit, register, formState ,setValue} = createPost;
 
@@ -101,10 +101,10 @@ export default function CreatePost() {
      refetch.invalidateQueries({queryKey:['userPosts'],refetchType:'active'});
       }
     }catch(err){
-      console.log(err);
+    
       setCreatePostLoading(false);
       setShowMenu({ isShow: false, target: "" });
-      setCreatePostToast({visible:true,msg:`Error submiting Post ${err}`,status:'error'});
+      setCreatePostToast({visible:true,msg:`Error submiting Post, image size maybe large, or type not supported 413`,status:'error'});
        setTimeout(()=>{
       setCreatePostToast({visible:false,msg:'',status:''});
      },3000)
@@ -162,7 +162,9 @@ export default function CreatePost() {
                   className="w-full"
                 />
               </div>
-            )}
+            )
+               }
+
 
             <div className="border-t-2 border-slate-200 flex justify-end p-2">
               <button className="rounded-4xl bg-main p-3 cursor-pointer text-white poppins">

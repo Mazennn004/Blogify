@@ -86,7 +86,12 @@ export default function Post({ data: p }) {
       }
      
     }catch(err){
-      console.log(err);
+      console.error(err);
+      
+      setCreatePostToast({visible:true,msg:'Could not Delete Post',status:'error'});
+        setTimeout(()=>{
+           setCreatePostToast({visible:false,msg:'',status:''});
+        },3000);
     }
   }
   return (
@@ -98,7 +103,7 @@ export default function Post({ data: p }) {
       ) : (
         ""
       )}
-      <div className="flex w-full flex-col gap-4 rounded-2xl shadow bg-white ">
+      <div className="flex w-full flex-col gap-4 rounded-2xl shadow bg-white dark:bg-slate-900 dark:text-white">
         {" "}
         {/*Card Post*/}
         <div className="p-5 ">
@@ -127,7 +132,7 @@ export default function Post({ data: p }) {
                 </div>
                 <ul
                   tabIndex={0}
-                  className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+                  className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm dark:text-slate-800"
                 >
                   <li onClick={()=>{setShowMenu({isShow:true,target:'updatePost',data:p})
                   
@@ -165,7 +170,7 @@ export default function Post({ data: p }) {
             ""
           )}
         </div>
-        <div className="bg-slate-100 p-3 ">
+        <div className="bg-slate-100 p-3 dark:bg-slate-700">
           <ul className="poppins p-2 text-slate-500 flex gap-5">
             <li>
               <i className="fa-regular fa-heart mx-1 text-lg cursor-pointer hover:text-red-600 hover:scale-[105%] transition-all duration-300"></i>
@@ -211,7 +216,7 @@ export default function Post({ data: p }) {
                       ? "Be the first to Comment..!"
                       : "Write a Comment..!"
                   }
-                  className="mx-2 rounded-3xl w-full p-3 bg-slate-200 focus:outline-main placeholder:font-[poppins] placeholder:text-slate-600"
+                  className="mx-2  rounded-3xl w-full p-3 bg-slate-200 dark:bg-slate-800 focus:outline-main placeholder:font-[poppins] placeholder:text-slate-600 dark:placeholder:text-slate-300"
                 />
                 <button>
                   {isLoading ? (
@@ -244,7 +249,7 @@ export default function Post({ data: p }) {
                     ? "Be the first to Comment..!"
                     : "Write a Comment..!"
                 }
-                className="mx-2  rounded-3xl w-full p-3 bg-slate-200 focus:outline-main placeholder:font-[poppins] placeholder:text-slate-600"
+                className="mx-2  rounded-3xl w-full p-3 bg-slate-200 dark:bg-slate-800 focus:outline-main placeholder:font-[poppins] placeholder:text-slate-600 dark:placeholder:text-slate-300"
               />
               <button>
                 {isLoading ? (

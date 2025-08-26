@@ -1,45 +1,17 @@
 import React, { useContext, useState } from "react";
 import style from "./Profile.module.css";
 import { tokenContext } from "../../Context/TokenContext";
-import axios from "axios";
-import { useEffect } from "react";
-import { shortFormat } from "../Home/Home";
-import { Link, useNavigate } from "react-router-dom";
-import Post from "../Post/Post";
-import { useQuery } from "@tanstack/react-query";
+import { NavLink, Outlet } from "react-router-dom";
 import Toast from './../Toast/Toast';
+
 export default function Profile() {
-  const { userData, isAuth ,setShowMenu,editProfileToast} = useContext(tokenContext);
-
-  function getUserPosts(token) {
-    return axios.get(
-      "https://linked-posts.routemisr.com/users/664bcf3e33da217c4af21f00/posts?limit=10",
-      {
-        headers: {
-          token: token,
-        },
-      }
-    );
-  }
-  const nav = useNavigate();
-  let { data, isLoading, isError } = useQuery({
-    queryKey: ["userPosts"],
-    queryFn: () => {
-      return getUserPosts(isAuth);
-    },
-    retry:1,
-    select:(data)=>data?.data?.posts.reverse()
-  });
-
-  if (isError) {
-    nav("/home/networkerror");
-  }
-
-  return (
+  const { userData ,setShowMenu,editProfileToast} = useContext(tokenContext);
+  
+return (
     <>
       {editProfileToast.visible && <Toast msg={editProfileToast.msg} status={editProfileToast.status}/>}
       <div className=" w-full md:w-[75%] ms-auto m-10 p-2 flex flex-col gap-10 ">
-        <div className="rounded-2xl shadow ">
+        <div className="rounded-2xl shadow dark:bg-slate-900 dark:text-white">
           <div className="cover w-full  rounded-2xl h-[30vh] relative">
             <figure className="absolute bottom-[-30px] start-0 mx-5 ">
               {userData.photo ? (
@@ -49,7 +21,7 @@ export default function Profile() {
                   className="bg-slate-100 h-32 w-32 rounded-full"
                 />
               ) : (
-                <div className="skeleton h-32 w-32 rounded-full"></div>
+                <div className="skeleton h-32 w-32 rounded-full dark:bg-slate-600"></div>
               )}
             </figure>
           </div>
@@ -60,14 +32,14 @@ export default function Profile() {
                   {userData.name}
                 </span>
               ) : (
-                <div className="skeleton h-4 w-50 mt-10"></div>
+                <div className="skeleton h-4 w-50 mt-10 dark:bg-slate-600"></div>
               )}
               {userData.name ? (
                 <span className="block text-slate-600 font-normal poppins">
                   @{userData.name.split(" ").pop()}
                 </span>
               ) : (
-                <div className="skeleton h-4 w-28 mt-5 mx-2"></div>
+                <div className="skeleton h-4 w-28 mt-5 mx-2 dark:bg-slate-600"></div>
               )}
             </div>
             <div className="settings mt-6">
@@ -81,52 +53,24 @@ export default function Profile() {
         </div>
 
         <div className="p-5 flex flex-col gap-10">
-          <ul className="flex gap-3 border-b border-slate-300">
-            <li className="p-3 border-b-2 border-main cursor-pointer">
-              <span className="poppins text-lg">My Posts</span>
+          <ul className="flex gap-3 border-b border-slate-300 dark:text-white">
+            <li className="py-3">
+              <NavLink to='/home/profile' end className={({ isActive }) =>
+          isActive ? "poppins text-lg p-3 border-b-2 border-main cursor-pointer" : "poppins text-lg p-3 cursor-pointer"}>My Posts</NavLink>
             </li>
-            <li className="p-3 ">
-              <span
-                title="Currnetly under Develepment"
-                className="poppins text-lg cursor-not-allowed"
+            <li className="py-3">
+              <NavLink
+              to='/home/profile/media'
+                className={({ isActive }) =>
+          isActive ? "poppins text-lg p-3 border-b-2 border-main cursor-pointer" : "poppins text-lg p-3 cursor-pointer"}
               >
                 Media
-              </span>
+              </NavLink>
             </li>
           </ul>
-          {isLoading && (
-            <div className="flex w-full flex-col gap-4 rounded-4xl p-5 shadow-md bg-white">
-              {" "}
-              {/*Card */}
-              <div className="flex items-center gap-4">
-                <div className="skeleton h-16 w-16 shrink-0 rounded-full"></div>
-                <div className="flex flex-col gap-4 ">
-                  <div className="skeleton h-4 w-20"></div>
-                  <div className="skeleton h-4 w-28"></div>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4 ">
-                <div className="skeleton h-4 w-[100%]"></div>
-                <div className="skeleton h-4 w-1/2"></div>
-              </div>
-              <div className="skeleton h-80 w-full"></div>
-            </div>
-          )}
-          {data?.length === 0 ? (
-            <div className="flex justify-center">
-              <div>
-                <span className="text-main text-4xl poppins font-bold">
-                  No Posts Yet !
-                </span>
-                <p className="text-slate-500 poppins font-light text-center">
-                  Say Hi to our Community!
-                </p>
-              </div>
-            </div>
-          ) : (data?.map((p) => {
-              return <Post key={p._id} data={p} />;
-            })
-          )}
+     <div>
+      <Outlet/>
+     </div>
         </div>
       </div>
     </>

@@ -95,7 +95,7 @@ export default function SignUp() {
   return (
     <>
       <Fade direction="right" duration={800}>
-        <div className="row h-screen">
+        <div className="row min-h-screen dark:text-white">
           <div className="w-full md:w-1/2 my-auto order-last">
             <header className="flex flex-col place-items-center ">
               <h2 className="poppins text-3xl font-bold  ">

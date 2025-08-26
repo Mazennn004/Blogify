@@ -8,7 +8,7 @@ export default function SideBar() {
   return (
     <>
       <div
-        className={`md:hidden dock dock-md fixed bottom-0 ${
+        className={`md:hidden dock dock-md fixed bottom-0 dark:bg-bgTheme dark:text-white ${
           showMenu.isShow ? "blur" : ""
         }`}
       >
@@ -83,7 +83,7 @@ export default function SideBar() {
             <NavLink
               to=""
               end
-              className=" block w-[80%] rounded-md hover:bg-slate-300 transition-all duration-300 text-main text-lg  p-2 "
+              className=" block w-[80%] rounded-md hover:bg-slate-300 dark:hover:bg-slate-600 transition-all duration-300 text-main text-lg  p-2 "
             >
               <i className="fa-regular fa-house mx-3"></i>Home
             </NavLink>
@@ -91,7 +91,7 @@ export default function SideBar() {
           <li>
             <NavLink
               to="profile"
-              className="block w-[80%] rounded-md hover:bg-slate-300 transition-all duration-300 text-main text-lg p-2"
+              className="block w-[80%] rounded-md hover:bg-slate-300 dark:hover:bg-slate-600 transition-all duration-300 text-main text-lg p-2"
             >
               <i className="fa-regular fa-user mx-3"></i>Profile
             </NavLink>

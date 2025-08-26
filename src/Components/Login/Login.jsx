@@ -60,7 +60,7 @@ export default function Login() {
 
   return (
     <Fade direction="left" duration={800}>
-      <div className="row h-screen overflow-hidden">
+      <div className="row h-screen overflow-hidden dark:text-white">
         <div className="w-full md:w-1/2 my-auto">
           <header className="flex flex-col  items-center">
             <Fade direction="up">

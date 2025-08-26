@@ -128,7 +128,7 @@ export default function Comment({ data: c }) {
             />
           </div>
         </div>
-        <div className="chat-bubble rounded-2xl poppins w-[90%] relative">
+        <div className="chat-bubble rounded-2xl poppins w-[90%] relative dark:bg-slate-600 dark:text-white">
           {c.commentCreator._id == userData._id ? (
             <span className="absolute end-0 top-0 p-2">
               <i
@@ -136,7 +136,7 @@ export default function Comment({ data: c }) {
                   setCommentMenu(true);
                   e.stopPropagation();
                 }}
-                className="fa-solid fa-ellipsis text-md text-slate-600 cursor-pointer"
+                className="fa-solid fa-ellipsis text-md text-slate-600 cursor-pointer dark:text-white"
               ></i>
               {showCommentMenu ? (
                 <ul className="menu bg-base-200 rounded-box w-56 absolute top-0 end-[-150px]">
@@ -165,9 +165,9 @@ export default function Comment({ data: c }) {
           ) : (
             ""
           )}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col  gap-2">
             <span className="poppins font-bold">{c.commentCreator.name}</span>
-            <span className="poppins font-light text-slate-500 overflow-clip relative">
+            <span className="poppins font-light text-slate-500 overflow-clip relative dark:text-white">
               {isEdit ? (
                 <form onSubmit={handleSubmit(updateComment)} className="w-full">
                   <input

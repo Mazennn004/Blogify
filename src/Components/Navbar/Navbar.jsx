@@ -9,48 +9,58 @@ import CreatePost from "../CreatePost/CreatePost";
 import Modal from "./../Modal/Modal";
 import { useQuery } from "@tanstack/react-query";
 import Toast from "../Toast/Toast";
+import { themeContext } from "../../Context/ThemeContext";
 
 export default function Navbar() {
-  const[userDataError,setUserDataError]=useState(false);
-  const { isAuth, setIsAuth, userData, setUserData, showMenu, setShowMenu ,setCreatePostToast,createPostToast} =
-    useContext(tokenContext);
+  const [userDataError, setUserDataError] = useState(false);
+  const {
+    isAuth,
+    setIsAuth,
+    userData,
+    setUserData,
+    showMenu,
+    setShowMenu,
+    setCreatePostToast,
+    createPostToast,
+  } = useContext(tokenContext);
+  const { setTheme, theme } = useContext(themeContext);
   const nav = useNavigate();
   function logout() {
     localStorage.removeItem("token");
     setIsAuth(null);
     nav("/");
   }
+
   function getUserData() {
     return axios.get("https://linked-posts.routemisr.com/users/profile-data", {
-        headers: {
-          token: isAuth,
-        },
-      })
-      
+      headers: {
+        token: isAuth,
+      },
+    });
   }
 
-  const {isSuccess,data,isError} = useQuery({
+  const { isSuccess, data, isError } = useQuery({
     queryKey: ["getUserData"],
     queryFn: getUserData,
-    staleTime:1000*60*60,
-    retry:false,
+    staleTime: 1000 * 60 * 60,
+    retry: false,
   });
 
   useEffect(() => {
-    if(isSuccess && data?.data?.user) {
+    if (isSuccess && data?.data?.user) {
       setUserData(data.data.user);
-      setUserDataError(false); 
-    }else if(isError){
-     setUserDataError(true);
+      setUserDataError(false);
+    } else if (isError) {
+      setUserDataError(true);
     }
-  }, [isSuccess, data,isError]);
+  }, [isSuccess, data, isError]);
 
   return (
     <>
       <div
         className={`${
           showMenu.isShow ? "blur" : ""
-        } navbar  bg-base-100 shadow-sm fixed top-0 z-10`}
+        } navbar  bg-base-100 shadow-sm fixed top-0 z-10 dark:bg-bgTheme`}
       >
         <div className="flex-1">
           <Link
@@ -70,6 +80,24 @@ export default function Navbar() {
             <i className="fa-solid fa-plus-circle mx-1.5 text-lg mt-1"></i>
             Create Post
           </button>
+          {theme == "dark" ? (
+            <i
+              onClick={() => {
+                setTheme("light");
+                localStorage.setItem('theme','light')
+              }}
+              className="fa-regular fa-sun text-3xl mt-2  cursor-pointer text-main"
+            ></i>
+          ) : (
+            <i
+              onClick={() => {
+                setTheme("dark");
+                 localStorage.setItem('theme','dark')
+              }}
+              className="fa-regular fa-moon text-3xl mt-2  cursor-pointer text-main"
+            ></i>
+          )}
+
           <div className="dropdown dropdown-end">
             <div
               tabIndex={0}
@@ -106,9 +134,17 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-      {showMenu.isShow ? <Modal target={showMenu.target} data={showMenu.data}/> : ""}
-      {userDataError && <Toast msg={'Error Fetching User Data'} status={'error'}/>}
-     { createPostToast.visible && <Toast msg={createPostToast.msg} status={createPostToast.status}/>}
+      {showMenu.isShow ? (
+        <Modal target={showMenu.target} data={showMenu.data} />
+      ) : (
+        ""
+      )}
+      {userDataError && (
+        <Toast msg={"Error Fetching User Data"} status={"error"} />
+      )}
+      {createPostToast.visible && (
+        <Toast msg={createPostToast.msg} status={createPostToast.status} />
+      )}
     </>
   );
 }

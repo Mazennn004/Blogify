@@ -29,8 +29,6 @@ export default function ChangeProfilePic() {
     }
   }
   async function changeProfilePic(values) {
-    console.log(values);
-    
     setloadingEditProfile(true);
     const formData = new FormData();
     const handledImg= await convertImageToJPEG(values.photo[0]);

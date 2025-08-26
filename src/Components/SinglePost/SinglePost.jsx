@@ -21,7 +21,7 @@ export default function SinglePost() {
     msg: "",
   });
   const [Loading, setIsLoading] = useState(false);
-  const { userData, showMenu, setShowMenu } = useContext(tokenContext);
+  const { userData, showMenu, setShowMenu,setCreatePostToast } = useContext(tokenContext);
   const nav = useNavigate();
   const form = useForm({
     defaultValues: {
@@ -78,6 +78,31 @@ export default function SinglePost() {
       }, 1000);
     }
   }
+   async function deletePost(){
+    try{
+      const {data}=await axios.delete(`https://linked-posts.routemisr.com/posts/${id}`,{
+        headers:{
+          token:localStorage.getItem('token'),
+        }
+      })
+      if(data.message==='success'){
+        nav('/home');
+        setCreatePostToast({visible:true,msg:'Post Deleted successfully',status:'success'});
+        setTimeout(()=>{
+           setCreatePostToast({visible:false,msg:'',status:''});
+        },3000);
+        query.invalidateQueries({queryKey:['getPosts'],refetchType:'active'});
+        query.invalidateQueries({queryKey:['userPosts'],refetchType:'active'});
+      }
+     
+    }catch(err){
+      console.error(err);
+       setCreatePostToast({visible:true,msg:'Could not Delete Post',status:'error'});
+        setTimeout(()=>{
+           setCreatePostToast({visible:false,msg:'',status:''});
+        },3000);
+    }
+  }
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["singlePost"],
@@ -98,10 +123,10 @@ export default function SinglePost() {
         ""
       )}
 
-      <div className=" w-full md:w-[50%] mx-auto m-10 p-5 flex flex-col gap-10 ">
+      <div  className=" w-full md:w-[50%] mx-auto m-10 p-5 flex flex-col gap-10 ">
         <div
           key={data?._id}
-          className="flex w-full flex-col gap-4 rounded-2xl shadow-md bg-white"
+          className="flex w-full flex-col gap-4 rounded-2xl shadow-md dark:bg-slate-900 text-white"
         >
           <input
             type="text"
@@ -111,7 +136,7 @@ export default function SinglePost() {
             value={`${data?._id}`}
           />{" "}
           {/*Card Post*/}
-          <div className="p-5">
+          <div  className="p-5">
             <div className="flex items-center justify-between gap-4">
               <div className="flex gap-4">
                 <img
@@ -137,14 +162,14 @@ export default function SinglePost() {
                 </div>
                 <ul
                   tabIndex={0}
-                  className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+                  className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm dark:text-slate-600"
                 >
-                  <li onClick={()=>{setShowMenu({isShow:true,target:'updatePost'})
+                  <li onClick={()=>{setShowMenu({isShow:true,target:'updatePost',data:data})
                   
                   }}>
                     <span className="poppins"><i className="fa-solid fa-edit text-md mx-2 text-main"></i> Edit</span>
                   </li>
-                  <li onClick={()=>{console.log('delete');
+                  <li onClick={()=>{deletePost();
                   }}>
                      <span className="poppins"><i className="fa-solid fa-trash text-md mx-2 text-red-400"></i> Delete</span>
                   </li>
@@ -173,8 +198,8 @@ export default function SinglePost() {
               ""
             )}
           </div>
-          <div className="bg-slate-100 p-3 ">
-            <ul className="poppins p-2 text-slate-500 flex gap-5">
+          <div className="bg-slate-100 p-3 dark:bg-slate-700">
+            <ul className="poppins p-2 text-slate-500 flex gap-5 ">
               <li>
                 <i className="fa-regular fa-heart mx-1 text-lg cursor-pointer hover:text-red-600 hover:scale-[105%] transition-all duration-300"></i>
                 {data?.comments.length}
@@ -206,7 +231,7 @@ export default function SinglePost() {
                     ? "Be the first to Comment..!"
                     : "Write a Comment..!"
                 }
-                className="mx-2 rounded-3xl w-full p-3 bg-slate-200 focus:outline-main placeholder:font-[poppins] placeholder:text-slate-600"
+                className="mx-2 rounded-3xl w-full p-3 bg-slate-200 dark:bg-slate-800 focus:outline-main placeholder:font-[poppins] placeholder:text-slate-600 dark:placeholder:text-slate-300"
               />
               <input
                 type="text"
@@ -241,23 +266,23 @@ export default function SinglePost() {
 
       {isLoading && (
         <div className=" w-full md:w-[50%] mx-auto m-10 p-5 flex flex-col gap-10 ">
-          <div className="flex w-full flex-col gap-4 rounded-4xl p-5 shadow-md bg-white">
+          <div className="flex w-full flex-col gap-4 rounded-4xl p-5 shadow-md bg-white dark:bg-slate-900">
             {" "}
             {/*Card Post*/}
             <div className="flex items-center gap-4">
-              <div className="skeleton h-16 w-16 shrink-0 rounded-full"></div>{" "}
+              <div className="skeleton h-16 w-16 shrink-0 rounded-full dark:bg-slate-600"></div>{" "}
               {/*profile image */}
               <div className="flex flex-col gap-4 ">
-                <div className="skeleton h-4 w-20"></div> {/* Name */}
-                <div className="skeleton h-4 w-28"></div> {/* @name*/}
+                <div className="skeleton h-4 w-20 dark:bg-slate-600"></div> {/* Name */}
+                <div className="skeleton h-4 w-28 dark:bg-slate-600"></div> {/* @name*/}
               </div>
             </div>
             <div className="flex flex-col gap-4 ">
               {/*Post Content*/}
-              <div className="skeleton h-4 w-[100%]"></div>
-              <div className="skeleton h-4 w-1/2"></div>
+              <div className="skeleton h-4 w-[100%] dark:bg-slate-600"></div>
+              <div className="skeleton h-4 w-1/2 dark:bg-slate-600"></div>
             </div>
-            <div className="skeleton h-80 w-full"></div> {/* Post image*/}
+            <div className="skeleton h-80 w-full dark:bg-slate-600"></div> {/* Post image*/}
           </div>
         </div>
       )}

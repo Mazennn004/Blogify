@@ -16,10 +16,14 @@ import SinglePost from "./Components/SinglePost/SinglePost";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import ChangeProfilePic from "./Components/ChangeProfilePic/ChangeProfilePic";
+import MyPosts from "./Components/MyPosts/MyPosts";
+import Media from './Components/Media/Media';
+import { themeContext } from "./Context/ThemeContext";
 const query = new QueryClient();
 
 function App() {
   const { isAuth } = useContext(tokenContext);
+  const{theme,setTheme}=useContext(themeContext);
   const routes = createBrowserRouter([
     { index: true, element: <Login /> },
     { path: "signup", element: <SignUp /> },
@@ -46,6 +50,14 @@ function App() {
               <Profile />
             </ProtectionGuard>
           ),
+          children:[
+            {index:true,element:<ProtectionGuard>
+              <MyPosts/>
+            </ProtectionGuard>},
+            {path:'media',element:<ProtectionGuard>
+              <Media/>
+            </ProtectionGuard>}
+          ]
         },
         {
           path: "singlepost/:id",
@@ -71,7 +83,10 @@ function App() {
 
   return (
     <QueryClientProvider client={query}>
-      <RouterProvider router={routes}></RouterProvider>
+      
+      <div className={`bg-slate-100 dark:bg-bgTheme ${theme}`}>
+         <RouterProvider router={routes}></RouterProvider>
+      </div>
       <ReactQueryDevtools />
     </QueryClientProvider>
   );
