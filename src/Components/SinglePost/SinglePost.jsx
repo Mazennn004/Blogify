@@ -109,6 +109,33 @@ export default function SinglePost() {
     queryFn: () => getSinglePost(id),
     select: (data) => data?.data?.post,
   });
+  if(isLoading){
+    return(
+      
+        <div className=" w-full md:w-[50%] mx-auto m-10 p-5 flex flex-col gap-10 md:pb-[100px]">
+          <div className="flex w-full flex-col gap-4 rounded-4xl p-5 shadow-md bg-white dark:bg-slate-900">
+            {" "}
+            {/*Card Post*/}
+            <div className="flex items-center gap-4">
+              <div className="skeleton h-16 w-16 shrink-0 rounded-full dark:bg-slate-600"></div>{" "}
+              {/*profile image */}
+              <div className="flex flex-col gap-4 ">
+                <div className="skeleton h-4 w-20 dark:bg-slate-600"></div> {/* Name */}
+                <div className="skeleton h-4 w-28 dark:bg-slate-600"></div> {/* @name*/}
+              </div>
+            </div>
+            <div className="flex flex-col gap-4 ">
+              {/*Post Content*/}
+              <div className="skeleton h-4 w-[100%] dark:bg-slate-600"></div>
+              <div className="skeleton h-4 w-1/2 dark:bg-slate-600"></div>
+            </div>
+            <div className="skeleton h-80 w-full dark:bg-slate-600"></div> {/* Post image*/}
+          </div>
+        </div>
+      
+    )
+
+  }
 
   if (isError) {
     nav("/home/networkerror");
@@ -123,7 +150,7 @@ export default function SinglePost() {
         ""
       )}
 
-      <div  className=" w-full md:w-[50%] mx-auto m-10 p-5 flex flex-col gap-10 ">
+      <div  className=" w-full md:w-[50%] mx-auto m-10 p-5 flex flex-col gap-10 md:pb-[300px]">
         <div
           key={data?._id}
           className="flex w-full flex-col gap-4 rounded-2xl shadow-md dark:bg-slate-900 dark:text-white "
@@ -265,28 +292,7 @@ export default function SinglePost() {
         </div>
       </div>
 
-      {isLoading && (
-        <div className=" w-full md:w-[50%] mx-auto m-10 p-5 flex flex-col gap-10 ">
-          <div className="flex w-full flex-col gap-4 rounded-4xl p-5 shadow-md bg-white dark:bg-slate-900">
-            {" "}
-            {/*Card Post*/}
-            <div className="flex items-center gap-4">
-              <div className="skeleton h-16 w-16 shrink-0 rounded-full dark:bg-slate-600"></div>{" "}
-              {/*profile image */}
-              <div className="flex flex-col gap-4 ">
-                <div className="skeleton h-4 w-20 dark:bg-slate-600"></div> {/* Name */}
-                <div className="skeleton h-4 w-28 dark:bg-slate-600"></div> {/* @name*/}
-              </div>
-            </div>
-            <div className="flex flex-col gap-4 ">
-              {/*Post Content*/}
-              <div className="skeleton h-4 w-[100%] dark:bg-slate-600"></div>
-              <div className="skeleton h-4 w-1/2 dark:bg-slate-600"></div>
-            </div>
-            <div className="skeleton h-80 w-full dark:bg-slate-600"></div> {/* Post image*/}
-          </div>
-        </div>
-      )}
+      
     </>
   );
 }
