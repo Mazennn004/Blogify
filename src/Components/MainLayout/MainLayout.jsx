@@ -10,7 +10,7 @@ export default function MainLayout() {
   return (
   <>
 <Navbar/>
-<div  className={`relative pt-[70px] ${ showMenu.isShow ? "blur":"" }`}>
+<div  className={`relative pt-[70px] md:pb-1 ${ showMenu.isShow ? "blur":"" }`}>
   <Outlet/>
 </div>
 <SideBar/>

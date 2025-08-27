@@ -9,7 +9,7 @@ export default function NetwrokError() {
     <>
       <div className="flex items-center justify-center h-screen flex-col">
         <h1 className="text-8xl text-red-600 font-extrabold poppins">!!!</h1>
-        <p className="text-5xl text-black font-bold poppins mt-3 text-center">
+        <p className="text-5xl text-black font-bold poppins mt-3 text-center dark:text-white">
           Oops!
         </p>
         <p className="text-slate-700 poppins mt-5 text-center md:w-[50%]">

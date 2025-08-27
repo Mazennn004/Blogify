@@ -16,7 +16,7 @@ export default function UserPostPhoto({ img }) {
                 className="fa-solid fa-close text-lg text-white font-light p-2 cursor-pointer"
               ></i>
             </span>
-            <img src={img} alt="PostImage" className="w-full rounded-xl"/>
+            <img src={img} alt="PostImage" className="w-full max-h-[650px] object-cover rounded-xl"/>
         </div>
       </div>
     </>

@@ -207,7 +207,7 @@ export default function SignUp() {
                 type="date"
                 className={`${
                   formState.errors.dateOfBirth ? " border border-red-500" : ""
-                } input w-[80%] mx-auto `}
+                } input w-[80%] mx-auto dark:bg-bgTheme dark:border-white`}
                 id="datebirth"
               />
               {formState.errors.dateOfBirth ? (

@@ -230,7 +230,7 @@ export default function Post({ data: p }) {
           </div>
         ) : (
           <div className="comment-input flex flex-row m-3">
-            <div className="w-12 rounded-full h-12 bg-red-500">
+            <div className="w-12 rounded-full h-12">
               <img
                 alt="Tailwind CSS chat bubble component"
                 src={userData.photo}

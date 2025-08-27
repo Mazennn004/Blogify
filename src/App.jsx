@@ -56,7 +56,8 @@ function App() {
             </ProtectionGuard>},
             {path:'media',element:<ProtectionGuard>
               <Media/>
-            </ProtectionGuard>}
+            </ProtectionGuard>},
+            {path:'*',element:<NotFound direction={"/home"}/>}
           ]
         },
         {

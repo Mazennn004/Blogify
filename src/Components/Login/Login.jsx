@@ -8,8 +8,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import axios from "axios";
 import { tokenContext } from "../../Context/TokenContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Login() {
+  const query=useQueryClient();
   const schema = z.object({
     email: z.email("Enter valid email address *"),
     password: z
@@ -46,6 +48,7 @@ export default function Login() {
       if (data.message === "success") {
         setLoading(false);
         localStorage.setItem("token", data.token);
+        query.invalidateQueries({queryKey:['getUserData'],refetchType:'active'});
         setIsAuth(data.token);
         navigate("home");
       } else {

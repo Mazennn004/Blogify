@@ -32,6 +32,8 @@ export default function Media() {
   if(isError){
     nav('/home/networkerror');
   }
+ 
+  
 
   return (
     <>

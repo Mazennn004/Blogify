@@ -126,7 +126,7 @@ export default function SinglePost() {
       <div  className=" w-full md:w-[50%] mx-auto m-10 p-5 flex flex-col gap-10 ">
         <div
           key={data?._id}
-          className="flex w-full flex-col gap-4 rounded-2xl shadow-md dark:bg-slate-900 text-white"
+          className="flex w-full flex-col gap-4 rounded-2xl shadow-md dark:bg-slate-900 dark:text-white "
         >
           <input
             type="text"
@@ -213,10 +213,11 @@ export default function SinglePost() {
             </ul>
           </div>
           <div className="comment-input flex flex-row mt-5 p-3">
-            <div className="w-12 rounded-full">
+            <div className="w-12 h-12 rounded-full">
               <img
                 alt="Tailwind CSS chat bubble component"
                 src={userData.photo}
+                className="w-full h-full rounded-full object-cover"
               />
             </div>
             <form
