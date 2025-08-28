@@ -153,7 +153,7 @@ export default function SinglePost() {
       <div  className=" w-full md:w-[50%] mx-auto m-10 p-5 flex flex-col gap-10 md:pb-[300px]">
         <div
           key={data?._id}
-          className="flex w-full flex-col gap-4 rounded-2xl shadow-md dark:bg-slate-900 dark:text-white "
+          className="flex w-full flex-col gap-4 rounded-2xl shadow-md bg-white dark:bg-slate-900 dark:text-white "
         >
           <input
             type="text"
