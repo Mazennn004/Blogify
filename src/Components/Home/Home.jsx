@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState ,useRef} from "react";
 import style from "./Home.module.css";
 import { useEffect } from "react";
 import axios from "axios";
@@ -7,7 +7,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { Link, useNavigate } from "react-router-dom";
 import { tokenContext } from "../../Context/TokenContext";
 import Post from "./../Post/Post";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery,useInfiniteQuery } from "@tanstack/react-query";
 dayjs.extend(relativeTime);
 export function shortFormat(dateString) {
   const diffSeconds = dayjs().diff(dayjs(dateString), "second");
@@ -37,24 +37,67 @@ export default function Home() {
 
   const nav = useNavigate();
 
-  function getAllPosts() {
-    return axios
-      .get(`https://linked-posts.routemisr.com/posts?limit=50`, {
-        headers: {
-          token: localStorage.getItem("token"),
-        },
-        params:{
-          sort:'-createdAt',
-        }
-      })
-      .then((res) => res.data);
+  const LIMIT = 10; // change per page size
+
+  // fetch function for a given pageParam
+  async function fetchPosts({ pageParam = 1 }) {
+    const res = await axios.get(`https://linked-posts.routemisr.com/posts`, {
+      headers: {
+        token: localStorage.getItem("token"),
+      },
+      params: {
+        limit: LIMIT,
+        page: pageParam,
+        sort: "-createdAt",
+      },
+    });
+    // normalize result to include nextPage
+    const payload = res.data;
+    // try to infer next page: if API returns page/totalPages use them; otherwise derive from posts length
+    const currentPage = payload.page ?? pageParam;
+    let nextPage = undefined;
+    if (payload.totalPages != null) {
+      nextPage = currentPage < payload.totalPages ? currentPage + 1 : undefined;
+    } else {
+      nextPage = (payload.posts?.length ?? 0) === LIMIT ? currentPage + 1 : undefined;
+    }
+    return { posts: payload.posts ?? [], nextPage };
   }
 
-  const { data, isLoading, isError } = useQuery({
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ["getPosts"],
-    queryFn: getAllPosts,
-    retry:1,
+    queryFn: fetchPosts,
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    retry: 1,
   });
+
+  // flatten pages
+  const posts = data?.pages.flatMap((p) => p.posts) ?? [];
+
+  // intersection observer sentinel
+  const loadMoreRef = useRef(null);
+  useEffect(() => {
+    if (!loadMoreRef.current) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+          }
+        });
+      },
+      { root: null, rootMargin: "200px", threshold: 0.1 }
+    );
+    observer.observe(loadMoreRef.current);
+    return () => observer.disconnect();
+  }, [loadMoreRef.current, hasNextPage, isFetchingNextPage]);
 
   if (isLoading) {
     return (
@@ -96,10 +139,22 @@ export default function Home() {
   return (
     <>
       <div className=" w-full md:w-[50%] mx-auto m-4 p-3 flex flex-col gap-10">
-        {data?.posts.map((p) => {
+        {posts.map((p) => {
           return <Post key={p._id} data={p} />;
         })}
+
+        {/* sentinel element observed by IntersectionObserver */}
+        <div ref={loadMoreRef} style={{ height: 1 }} />
+
+        {/* optional loader / manual load more */}
+        {isFetchingNextPage && (
+          <div className="text-center py-4"><i className="fa-solid fa-spinner fa-spin"></i></div>
+        )}
+        {!hasNextPage && posts.length > 0 && (
+          <div className="text-center py-4 text-slate-500">No more posts</div>
+        )}
       </div>
     </>
   );
 }
+// ...existing code...
